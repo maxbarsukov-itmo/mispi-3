@@ -37,6 +37,8 @@ dependencies {
   implementation('org.apache.commons:commons-lang3:3.12.0')
   implementation('com.google.code.gson:gson:2.10.1')
 
+  testImplementation('junit:junit:4.13.1')
+
   runtimeOnly('org.flywaydb:flyway-gradle-plugin:9.16.1')
 
   compileOnly('org.projectlombok:lombok:1.18.26')

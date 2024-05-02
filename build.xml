@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="lab3" default="build">
+
+    <property file="build.properties"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+        <fileset dir="${main.dir}" includes="*.java"/>
+    </path>
+
+    <path id="classpath.test">
+        <pathelement location="${junit}"/>
+        <pathelement location="${hamcrest}"/>
+        <pathelement location="${classes.dir}"/>
+    </path>
+
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${contrib}"/>
+        </classpath>
+    </taskdef>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="${contrib}"/>
+        </classpath>
+    </taskdef>
+
+    <target name="compile" depends="clean">
+        <echo message="***** COMPILE STARTED *****"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${test.classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" includeantruntime="false"/>
+        <echo message="***** COMPILE COMPLETED *****"/>
+    </target>
+
+    <target name="build" depends="compile">
+        <echo message="***** BUILD STARTED *****"/>
+        <copy todir="${build.dir}">
+            <fileset dir="${web.dir}"/>
+        </copy>
+        <copy todir="${build.dir.lib}">
+            <fileset dir="${lib.dir}"/>
+        </copy>
+        <copy todir="${classes.dir}">
+            <fileset dir="${resources.dir}"/>
+        </copy>
+        <jar destfile="${build.dir}/${ant.project.name}.jar">
+            <fileset dir="${classes.dir}"/>
+            <manifest>
+                <attribute name="Created-By" value="nyapsilon"/>
+                <attribute name="Manifest-Version" value="1.0"/>
+                <attribute name="Main-Class" value="NoClass"/>
+            </manifest>
+        </jar>
+        <war destfile="${build.dir}/${ant.project.name}.war" webxml="${build.web.xml}">
+            <fileset dir="${build.dir}"/>
+            <manifest>
+                <attribute name="Created-By" value="nyapsilon"/>
+                <attribute name="Manifest-Version" value="1.0"/>
+                <attribute name="Main-Class" value="NoClass"/>
+            </manifest>
+        </war>
+        <echo message="***** BUILD COMPLETED *****"/>
+    </target>
+
+    <target name="clean">
+        <echo message="***** CLEAN STARTED *****"/>
+        <delete dir="${build.dir}"/>
+        <delete dir="${junit.report.dir}"/>
+        <echo message="***** CLEAN COMPLETED *****"/>
+    </target>
+
+    <target name="test" depends="build">
+        <echo message="***** TEST STARTED *****"/>
+        <mkdir dir="${test.classes.dir}"/>
+        <mkdir dir="${junit.report.dir}"/>
+        <javac destdir="${test.classes.dir}" srcdir="${test.dir}" includeantruntime="false" encoding="utf-8">
+            <classpath refid="classpath.test"/>
+        </javac>
+        <junit printsummary="on" haltonfailure="true" haltonerror="true">
+            <classpath>
+                <path refid="classpath.test"/>
+                <pathelement location="${test.classes.dir}"/>
+            </classpath>
+            <batchtest fork="yes" todir="${junit.report.dir}">
+                <formatter type="plain"/>
+                <fileset dir="${test.dir}" includes="*Test.java"/>
+            </batchtest>
+        </junit>
+        <echo message="***** TEST COMPLETED *****"/>
+    </target>
+
+    <target name="native2ascii">
+      <echo message="***** NATIVE2ASCII STARTED *****"/>
+      <delete dir="${native2ascii.resources}"/>
+      <native2ascii src="${resources.dir}"
+                    dest="${native2ascii.resources}"
+                    includes="**/*.properties"/>
+      <echo message="***** NATIVE2ASCII COMPLETED *****"/>
+    </target>
+
+    <target name="diff" depends="build" >
+      <echo message="***** DIFF STARTED *****"/>
+        <loadfile property="params" srcFile="params.props"/>
+        <exec executable="git" outputproperty="differences">
+          <arg value="diff"/>
+          <arg value="--name-only"/>
+        </exec>
+        <var name="commit.flag" unset="true"/>
+        <script language="javascript">
+          var diffs = project.getProperty("differences").split("\n");
+          var params = project.getProperty("params").split("\n");
+            for (var i=0; i&lt;params.length; i++) {
+              for (var j=0; j&lt;diffs.length; j++) {
+                if (params[i] === diffs[j]) {
+                  var flag = true;
+                  project.setProperty("commit.flag", true);
+                  break;
+                }
+              }
+              if (flag) {
+              break;
+            }
+          }
+        </script>
+        <if>
+          <not>
+            <isset property="commit.flag"/>
+          </not>
+          <then>
+            <exec executable="git">
+              <arg value="add"/>
+              <arg value="*"/>
+            </exec>
+            <exec executable="git">
+              <arg value="commit"/>
+              <arg value="-m"/>
+              <arg value="'feat: :sparkles: some shit added (auto-commit)'"/>
+            </exec>
+          </then>
+          <else>
+            <echo>Commit failed.</echo>
+          </else>
+        </if>
+      <echo message="***** DIFF COMPLETED *****"/>
+    </target>
+</project>

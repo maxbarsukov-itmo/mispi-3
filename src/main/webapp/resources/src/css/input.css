@@ -1,0 +1,34 @@
+.value-picker-field {
+    padding: 5px 0
+}
+
+.value-picker-element {
+    border: 1px solid var(--borders-color);
+    background: var(--primary-background);
+    border-radius: 5px;
+    outline: none
+}
+
+
+input.value-picker-element {
+    color: var(--primary-text);
+    width: 250px;
+    padding: 10px
+}
+
+select.value-picker-element {
+    color: var(--primary-text);
+    width: 70px;
+    padding: 10px
+}
+
+#input_y_warning {
+    color: var(--error)
+}
+
+.label {
+    font-weight: bold;
+    font-size: 20px;
+    color: var(--primary-text);
+    padding-right: 20px
+}

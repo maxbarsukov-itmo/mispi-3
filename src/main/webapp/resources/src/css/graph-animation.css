@@ -1,0 +1,43 @@
+.gradient-animation-box {
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 400px;
+    display: flex;
+    overflow: hidden;
+    border-radius: inherit
+}
+
+.gradient-animation-box::before {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background-image: conic-gradient(transparent, transparent, transparent, #00ccff);
+    transition: all .5s ease-in-out;
+    filter: blur(70px);
+    animation: animate 4s linear infinite;
+    z-index: -1
+}
+
+.gradient-animation-box::after {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background-image: conic-gradient(transparent, transparent, transparent, #00d4d4);
+    animation: animate 4s linear infinite;
+    filter: blur(70px);
+    animation-delay: -2s;
+    z-index: -1
+}
+
+@keyframes animate {
+    0% {
+        transform: rotate(0deg)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
+}

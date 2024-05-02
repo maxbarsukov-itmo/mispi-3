@@ -1,0 +1,38 @@
+table {
+    border-collapse: collapse;
+    text-align: left;
+    border-radius: inherit;
+    overflow: hidden
+}
+
+thead {
+    padding-bottom: 10px;
+    font-weight: bold
+}
+
+tbody {
+    font-weight: 400
+}
+
+tr:nth-child(even) {
+    background-color: var(--secondary-background)
+}
+
+th, td {
+    padding: 10px 10px;
+    color: var(--primary-text)
+}
+
+.status {
+    border-radius: 5px;
+    padding: 7px 10px;
+    text-align: center
+}
+
+.status-hit {
+    background-color: #273f32
+}
+
+.status-miss {
+    background-color: #362222
+}

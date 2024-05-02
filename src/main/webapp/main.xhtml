@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+  <title>Главная | Максим Барсуков</title>
+</h:head>
+
+<h:body>
+  <header>
+    <h1>Максим Барсуков</h1>
+    <h2>P3215, Вариант 18881</h2>
+  </header>
+
+  <div class="main-site-body">
+    <div class="list-item">
+      <div class="card">
+        <div class="gradient-animation-box">
+          <span>
+            <canvas id="graph" width="390" height="390"></canvas>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div id="error-message" class="error">R не установлено</div>
+
+    <div class="list-item">
+      <h:form id="form">
+        <h5 class="label">X</h5>
+        <h:outputText id="x" styleClass="mytext" name="x" value="#{attemptBean.x} "/>
+        <div class="buttons-container">
+          <h:commandButton value="-2.0" type="button" styleClass="mybutton">
+            <f:ajax render="x" listener="#{attemptBean.setX(-2)}"/>
+          </h:commandButton>
+          <h:commandButton value="-1.5" type="button" styleClass="mybutton">
+            <f:ajax render="x" listener="#{attemptBean.setX(-1.5)}"/>
+          </h:commandButton>
+          <h:commandButton value="-1.0" type="button" styleClass="mybutton">
+            <f:ajax render="x" listener="#{attemptBean.setX(-1)}"/>
+          </h:commandButton>
+          <h:commandButton value="-0.5" type="button" styleClass="mybutton">
+            <f:ajax render="x" listener="#{attemptBean.setX(-0.5)}"/>
+          </h:commandButton>
+          <h:commandButton value="0" type="button" styleClass="mybutton">
+            <f:ajax render="x" listener="#{attemptBean.setX(0)}"/>
+          </h:commandButton>
+        </div>
+
+        <h5 class="label">Y</h5>
+        <h:panelGrid columns="1">
+          <p:inputNumber name="y" id="y" maxlength="10" value="#{attemptBean.y}" decimalSeparator=".">
+            <f:validateDoubleRange minimum="-3" maximum="3"/>
+          </p:inputNumber>
+        </h:panelGrid>
+        <p:message for="y" display="text"/>
+
+        <h5 class="label">R</h5>
+        <h:panelGrid columns="1">
+          <p:selectOneRadio id="r" value="#{attemptBean.r}" styleClass="mytext">
+            <f:selectItem itemValue="1.0" itemLabel="1.0"/>
+            <f:selectItem itemValue="1.5" itemLabel="1.5"/>
+            <f:selectItem itemValue="2.0" itemLabel="2.0"/>
+            <f:selectItem itemValue="2.5" itemLabel="2.5"/>
+            <f:selectItem itemValue="3.0" itemLabel="3.0"/>
+            <p:ajax update="drawDotsPanel updateErrorMessageR"/>
+          </p:selectOneRadio>
+        </h:panelGrid>
+
+        <div class="list-item">
+          <div class="buttons-container">
+            <p:commandButton ajax="true" id="submit" value="Отправить"
+                             action="#{attemptRepository.addAttempt(attemptBean)}"
+                             update="table @form drawDotsPanel"/>
+            <p:commandButton ajax="true" id="reset" value="Очистить"
+                             action="#{attemptRepository.clearAttempts()}"
+                             update="table @form drawDotsPanel"/>
+            <h:button value="Начальная страница" styleClass="mybutton" outcome="go-index"/>
+          </div>
+        </div>
+      </h:form>
+    </div>
+
+    <p:dataTable id="table" value="#{attemptsList}" var="attempt" paginator="true"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                 rows="10" lazy="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
+                 style="width: 750px" styleClass="table">
+      <p:column headerText="ID">
+        <h:outputText value="#{attempt.id}"/>
+
+      </p:column>
+      <p:column headerText="X">
+        <h:outputText value="#{attempt.x}">
+          <f:convertNumber type="number"
+                           maxFractionDigits="3"
+                           groupingUsed="false"/>
+        </h:outputText>
+      </p:column>
+      <p:column headerText="Y">
+        <h:outputText value="#{attempt.y}">
+          <f:convertNumber type="number"
+                           maxFractionDigits="3"
+                           groupingUsed="false"/>
+        </h:outputText>
+    </p:column>
+      <p:column headerText="R">
+        <h:outputText value="#{attempt.r}"/>
+      </p:column>
+      <p:column headerText="Результат" styleClass="#{attempt.result ? 'result-yes' : 'result-no'}">
+        <h:outputText value="#{attempt.result ? 'Попал' : 'Не попал' }"/>
+      </p:column>
+      <p:column headerText="Отправлено">
+        <h:outputText value="#{attempt.createdAt}" >
+          <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+        </h:outputText>
+      </p:column>
+      <p:column headerText="Время выполнения">
+        <h:outputText value="#{attempt.executionTime}"/>
+      </p:column>
+    </p:dataTable>
+  </div>
+</h:body>
+
+<h:outputScript name="main.js" library="target"/>
+<h:panelGroup id="drawDotsPanel">
+  <h:outputScript>
+    window.drawDots(JSON.parse('#{attemptRepository.getPointsCoordinates()}'), JSON.parse('#{attemptBean.r}'));
+  </h:outputScript>
+</h:panelGroup>
+<h:panelGroup id="updateErrorMessageR">
+  <h:outputScript>
+    window.updateErrorMessageR(JSON.parse('#{attemptBean.r}'));
+  </h:outputScript>
+</h:panelGroup>
+<p:remoteCommand name="addAttempt" action="#{attemptRepository.addAttemptFromJsParams(attemptBean.r)}" update="table"
+                 process="@this"/>
+<p:remoteCommand name="updateGraph" update="drawDotsPanel" process="@this"/>
+</html>

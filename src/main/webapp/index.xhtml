@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+  <title>Web 3 | Максим Барсуков</title>
+  <h:outputStylesheet name="src/css/colors.css"/>
+  <h:outputStylesheet name="src/css/index.css"/>
+  <h:outputStylesheet name="src/css/header.css"/>
+  <h:outputStylesheet name="src/css/buttons.css"/>
+</h:head>
+
+<h:body>
+  <header>
+    <h1>Максим Барсуков</h1>
+    <h2>P3215, Вариант 18881</h2>
+  </header>
+
+  <h:form id="form" styleClass="buttons-container">
+    <canvas id="clock" width="390" height="390"></canvas>
+    <h:button value="Главная" styleClass="mybutton" action="go-to-main" id="go-to-main-button"/>
+  </h:form>
+</h:body>
+
+<h:outputScript library="src" name="js/clock.js"/>
+</html>

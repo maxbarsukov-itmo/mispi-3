@@ -21,6 +21,8 @@ Desktop.ini
 *.db
 rebel.xml
 
+!lib/*.jar
+
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
@@ -39,6 +41,9 @@ nb-configuration.xml
 *.iws
 .idea/
 atlassian-ide-plugin.xml
+
+# Test reports
+reports/*
 
 # External tool builders
 .externalToolBuilders/

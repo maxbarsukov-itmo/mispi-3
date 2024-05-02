@@ -7,13 +7,13 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <h:head>
-  <title>Главная | Максим Барсуков</title>
+  <title>#{msgs.main_head_title}</title>
 </h:head>
 
 <h:body>
   <header>
-    <h1>Максим Барсуков</h1>
-    <h2>P3215, Вариант 18881</h2>
+    <h1>#{msgs.header_h1}</h1>
+    <h2>#{msgs.header_h2}</h2>
   </header>
 
   <div class="main-site-body">
@@ -27,11 +27,11 @@
       </div>
     </div>
 
-    <div id="error-message" class="error">R не установлено</div>
+    <div id="error-message" class="error">#{msgs.main_r_field_empty_error}</div>
 
     <div class="list-item">
       <h:form id="form">
-        <h5 class="label">X</h5>
+        <h5 class="label">#{msgs.x_label}</h5>
         <h:outputText id="x" styleClass="mytext" name="x" value="#{attemptBean.x} "/>
         <div class="buttons-container">
           <h:commandButton value="-2.0" type="button" styleClass="mybutton">
@@ -51,7 +51,7 @@
           </h:commandButton>
         </div>
 
-        <h5 class="label">Y</h5>
+        <h5 class="label">#{msgs.y_label}</h5>
         <h:panelGrid columns="1">
           <p:inputNumber name="y" id="y" maxlength="10" value="#{attemptBean.y}" decimalSeparator=".">
             <f:validateDoubleRange minimum="-3" maximum="3"/>
@@ -59,7 +59,7 @@
         </h:panelGrid>
         <p:message for="y" display="text"/>
 
-        <h5 class="label">R</h5>
+        <h5 class="label">#{msgs.r_label}</h5>
         <h:panelGrid columns="1">
           <p:selectOneRadio id="r" value="#{attemptBean.r}" styleClass="mytext">
             <f:selectItem itemValue="1.0" itemLabel="1.0"/>
@@ -73,13 +73,13 @@
 
         <div class="list-item">
           <div class="buttons-container">
-            <p:commandButton ajax="true" id="submit" value="Отправить"
+            <p:commandButton ajax="true" id="submit" value="#{msgs.submit_button_text}"
                              action="#{attemptRepository.addAttempt(attemptBean)}"
                              update="table @form drawDotsPanel"/>
-            <p:commandButton ajax="true" id="reset" value="Очистить"
+            <p:commandButton ajax="true" id="reset" value="#{msgs.clear_button_text}"
                              action="#{attemptRepository.clearAttempts()}"
                              update="table @form drawDotsPanel"/>
-            <h:button value="Начальная страница" styleClass="mybutton" outcome="go-index"/>
+            <h:button value="#{msgs.index_link_text}" styleClass="mybutton" outcome="go-index"/>
           </div>
         </div>
       </h:form>
@@ -93,32 +93,32 @@
         <h:outputText value="#{attempt.id}"/>
 
       </p:column>
-      <p:column headerText="X">
+      <p:column headerText="#{msgs.x_label}">
         <h:outputText value="#{attempt.x}">
           <f:convertNumber type="number"
                            maxFractionDigits="3"
                            groupingUsed="false"/>
         </h:outputText>
       </p:column>
-      <p:column headerText="Y">
+      <p:column headerText="#{msgs.y_label}">
         <h:outputText value="#{attempt.y}">
           <f:convertNumber type="number"
                            maxFractionDigits="3"
                            groupingUsed="false"/>
         </h:outputText>
     </p:column>
-      <p:column headerText="R">
+      <p:column headerText="#{msgs.r_label}">
         <h:outputText value="#{attempt.r}"/>
       </p:column>
-      <p:column headerText="Результат" styleClass="#{attempt.result ? 'result-yes' : 'result-no'}">
-        <h:outputText value="#{attempt.result ? 'Попал' : 'Не попал' }"/>
+      <p:column headerText="#{msgs.result_header}" styleClass="#{attempt.result ? 'result-yes' : 'result-no'}">
+        <h:outputText value="#{attempt.result ? 'Hit' : 'Miss' }"/>
       </p:column>
-      <p:column headerText="Отправлено">
+      <p:column headerText="#{msgs.created_header}">
         <h:outputText value="#{attempt.createdAt}" >
           <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
         </h:outputText>
       </p:column>
-      <p:column headerText="Время выполнения">
+      <p:column headerText="#{msgs.execution_time_header}">
         <h:outputText value="#{attempt.executionTime}"/>
       </p:column>
     </p:dataTable>
@@ -128,7 +128,7 @@
 <h:outputScript name="main.js" library="target"/>
 <h:panelGroup id="drawDotsPanel">
   <h:outputScript>
-    window.drawDots(JSON.parse('#{attemptRepository.getPointsCoordinates()}'), JSON.parse('#{attemptBean.r}'));
+    window.drawIt(JSON.parse('#{attemptRepository.getPointsCoordinates()}'), JSON.parse('#{attemptBean.r}'));
   </h:outputScript>
 </h:panelGroup>
 <h:panelGroup id="updateErrorMessageR">

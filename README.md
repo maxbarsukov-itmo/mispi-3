@@ -2,7 +2,7 @@
 
 ## Вариант `1576`
 
-<img alt="anime" src="./.resources/anime1.gif" height="200">
+<img alt="anime" src="./.resources/anime.gif" height="200">
 
 > What do you call a really old ant? ~~An **ant**ique~~ Apache Ant
 

@@ -108,29 +108,31 @@
           <arg value="diff"/>
           <arg value="--name-only"/>
         </exec>
-        <var name="commit.flag" value="false"/>
+        <property name="commit.flag" value="false"/>
         <script language="javascript">
           var diffs = project.getProperty("differences").split("\n");
           var params = project.getProperty("params").split("\n");
+          var echo = project.createTask("echo");
 
           var flag = false;
           for (var i=0; i&lt;params.length; i++) {
             for (var j=0; j&lt;diffs.length; j++) {
               if (params[i] === diffs[j]) {
+                echo.setMessage("*** CHANGED FILE FOUND: " + params[i] + " ***");
+                echo.perform();
+
+                project.setProperty("commit.flag", "true");
                 flag = true;
-                project.setProperty("commit.flag", true);
                 break;
               }
             }
-            if (flag) {
-              break;
-            }
+            if (flag) break;
           }
         </script>
         <if>
           <equals arg1="${commit.flag}" arg2="true"/>
           <then>
-            <echo message="***** FILES FROM PARAMS CHANGED, COMMITING... *****"/>
+            <echo message="*** FILES FROM PARAMS CHANGED, COMMITING... ***"/>
             <exec executable="git">
               <arg value="add"/>
               <arg value="*"/>
@@ -142,7 +144,7 @@
             </exec>
           </then>
           <else>
-              <echo message="***** FILES FROM PARAMS NOT CHANGED *****"/>
+              <echo message="*** FILES FROM PARAMS NOT CHANGED ***"/>
           </else>
         </if>
       <echo message="***** DIFF COMPLETED *****"/>

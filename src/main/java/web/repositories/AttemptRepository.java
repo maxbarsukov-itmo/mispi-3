@@ -84,7 +84,7 @@ public class AttemptRepository implements Serializable {
   }
 
   public String getX() {
-    return collectToJson(Attempt::getX); // SOME COMMENT FOR diff
+    return collectToJson(Attempt::getX);
   }
 
   public String getY() {

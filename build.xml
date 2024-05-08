@@ -11,6 +11,7 @@
 
     <path id="classpath.test">
         <pathelement location="${junit}"/>
+        <pathelement location="${hamcrest}"/>
         <pathelement location="${classes.dir}"/>
     </path>
 
